@@ -49,11 +49,13 @@ PKGS=(
         'xclip'                 # System Clipboard
         'gnome-polkit'          # Elevate Applications
         'lxappearance'          # Set System Themes
+        'manjaro-settings-manager'
 
     # --- Login Display Manager -----------------------------------------------
 
         'lightdm'                   # Base Login Manager
         'lightdm-webkit2-greeter'   # Framework for Awesome Login Themes
+        'light-locker'
 
     # --- Networking Setup ----------------------------------------------------
 
@@ -238,6 +240,53 @@ PKGS=(
         'multimc5'
         'steam-native-runtime'
         'ttf-liberation'
+        'wine-staging'
+        'giflib'
+        'lib32-giflib'
+        'libpng'
+        'lib32-libpng'
+        'libldap'
+        'lib32-libldap'
+        'gnutls'
+        'lib32-gnutls'
+        'mpg123'
+        'lib32-mpg123'
+        'openal'
+        'lib32-openal'
+        'v4l-utils'
+        'lib32-v4l-utils'
+        'libpulse'
+        'lib32-libpulse'
+        'libgpg-error'
+        'lib32-libgpg-error'
+        'alsa-plugins'
+        'lib32-alsa-plugins'
+        'alsa-lib'
+        'lib32-alsa-lib'
+        'libjpeg-turbo'
+        'lib32-libjpeg-turbo'
+        'sqlite'
+        'lib32-sqlite'
+        'libxcomposite'
+        'lib32-libxcomposite'
+        'libxinerama'
+        'lib32-libgcrypt'
+        'libgcrypt'
+        'lib32-libxinerama'
+        'ncurses'
+        'lib32-ncurses'
+        'opencl-icd-loader'
+        'lib32-opencl-icd-loader'
+        'libxslt'
+        'lib32-libxslt'
+        'libva'
+        'lib32-libva'
+        'gtk3'
+        'lib32-gtk3'
+        'gst-plugins-base-libs'
+        'lib32-gst-plugins-base-libs'
+        'vulkan-icd-loader'
+        'lib32-vulkan-icd-loader'
 
     # THEMES --------------------------------------------------------------
 
@@ -251,34 +300,6 @@ PKGS=(
 for PKG in "${PKGS[@]}"; do
     paru -S "$PKG" --noconfirm --needed
 done
-
-
-
-
-# Generate the .xinitrc file so we can launch Awesome from the
-# terminal using the "startx" command
-# printf '#!/bin/bash
-# # Disable bell
-# xset -b
-# 
-# # Disable all Power Saving Stuff
-# xset -dpms
-# xset s off
-# 
-# # X Root window color
-# xsetroot -solid darkgrey
-# 
-# # Merge resources (optional)
-# #xrdb -merge $HOME/.Xresources
-# 
-# # Caps to Ctrl, no caps
-# setxkbmap -layout us -option ctrl:nocaps
-# if [ -d /etc/X11/xinit/xinitrc.d ] ; then
-# for f in /etc/X11/xinit/xinitrc.d/?*.sh ; do
-#     [ -x "\$f" ] && . "\$f"
-# done
-# unset f
-# fi' > ${HOME}/.xinitrc
 
 # ------------------------------------------------------------------------
 
@@ -345,12 +366,19 @@ sed -i 's/^%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/' /et
 # Add sudo rights
 sed -i 's/^# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
 
-
 echo
 echo "Getting dotfiles"
 
 cd $HOME
 git clone https://github.com/lbanca01/.dotfiles && cd ./dotfiles && stow *
+
+echo 
+echo "Securing system"
+git clone https://github.com/ChrisTitusTech/secure-linux.git && sh ./secure-linux/secure-linux.sh
+
+echo
+echo "Installing gamemode"
+git clone https://github.com/FeralInteractive/gamemode.git && cd gamemode && git checkout 1.6.1 && ./bootstrap.sh
 
 # Clean orphans pkg
 if [[ ! -n $(paru -Qdt) ]]; then
