@@ -159,10 +159,10 @@ PKGS=(
         'flameshot'             # Screenshots
         'freerdp'               # RDP Connections
         'libvncserver'          # VNC Connections
-        'nemo'              # Filesystem browser
+        'nemo'                  # Filesystem browser
         'remmina'               # Remote Connection
         'veracrypt'             # Disc encryption utility
-        'variety'               # Wallpaper changer
+        'nitrogen'              # Wallpaper changer
         'firefox'               # Web browser
         'jdownloader2'
         'stow'
@@ -251,7 +251,7 @@ PKGS=(
 for PKG in "${PKGS[@]}"; do
     paru -S "$PKG" --noconfirm --needed
 done
-}
+
 
 
 
@@ -320,6 +320,7 @@ echo
 echo "Enabling Login Display Manager"
 
 sudo systemctl enable --now lightdm.service
+sudo sed 's/^#logind-check-graphical=false/logind-check-graphical=true/g' /etc/lightdm/lightdm.conf 
 
 # ------------------------------------------------------------------------
 
